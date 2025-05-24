@@ -3,8 +3,8 @@ name: Build & Push Docker Image
 on:
   push:
     branches:
-      - main  # Trigger on pushes to the main branch
-  workflow_dispatch:  # Allows manual runs from GitHub UI
+      - main  # Trigger on push to the main branch
+  workflow_dispatch:  # Allows manual execution from the GitHub UI
 
 jobs:
   build-and-push:
@@ -14,11 +14,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Force lowercase GitHub username
+        run: echo "GHCR_USER=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
       - name: Log in to GitHub Container Registry
-        run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u $GHCR_USER --password-stdin
 
       - name: Build Docker image
-        run: docker build -t ghcr.io/${{ github.repository_owner }}/my-custom-image:latest .
+        run: docker build -t ghcr.io/$GHCR_USER/caddyl4-cloudflare-docker-proxy:latest .
 
       - name: Push Docker image to GHCR
-        run: docker push ghcr.io/${{ github.repository_owner }}/my-custom-image:latest
+        run: docker push ghcr.io/$GHCR_USER/caddyl4-cloudflare-docker-proxy:latest
