@@ -21,7 +21,7 @@ jobs:
         run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u $GHCR_USER --password-stdin
 
       - name: Build Docker image
-        run: docker build -t ghcr.io/$GHCR_USER/caddyl4-cloudflare-docker-proxy:latest .
+        run: docker build -t ghcr.io/$GHCR_USER/caddyl4-cloudflare-docker-proxy:v1 .
 
       - name: Push Docker image to GHCR
-        run: docker push ghcr.io/$GHCR_USER/caddyl4-cloudflare-docker-proxy:latest
+        run: docker push ghcr.io/$GHCR_USER/caddyl4-cloudflare-docker-proxy:v1
